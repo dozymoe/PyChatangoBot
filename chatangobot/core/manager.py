@@ -6,6 +6,7 @@ from .room import Room
 from .user import User
 from .pm import PM
 from .anonpm import AnonPMManager
+from .message import Message
 
 class Manager(object):
     """Class that manages multiple connections."""
@@ -14,6 +15,7 @@ class Manager(object):
     user_class = User
     pm_class = PM
     anonpm_class = AnonPMManager
+    message_class = Message
 
     user = None
     rooms = None
@@ -39,7 +41,6 @@ class Manager(object):
             _, password = self.get_user_credentials()
             if password:
                 self.pm = self.pm_class(loop=loop, mgr=self)
-                asyncio.ensure_future(self.pm.connect())
             else:
                 self.pm = self.anonpm_class(loop=loop, mgr=self) # pylint: disable=redefined-variable-type
 
@@ -255,6 +256,9 @@ class Manager(object):
                 self._future = self._loop.create_future()
             except AttributeError:
                 self._future = asyncio.Future()
+
+        if isinstance(self.pm, self.pm_class):
+            asyncio.ensure_future(self.pm.connect()) # pylint:disable=no-value-for-parameter
 
         for room_name in room_names:
             if hasattr(room_name, 'decode'):
@@ -830,5 +834,18 @@ class Manager(object):
         @param room: room where the event occured
         @type evt: str
         @param evt: the event
+        """
+        pass
+
+
+    @asyncio.coroutine
+    def onUserList(self, room, user_list):
+        """
+        Called when bot connected and given room members.
+
+        @type room: Room
+        @param room: room where the event occured
+        @type user_list: List of User
+        @param user_list: users inside the room
         """
         pass

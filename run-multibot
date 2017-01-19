@@ -20,20 +20,40 @@ from chatangobot.core.manager import Manager
 def worker_callback(room):
     loop = asyncio.get_event_loop()
     try:
-        bot = Manager(loop=loop, pm=True)
+        bot = ChatangoBot(loop=loop, pm=False)
 
         loop.add_signal_handler(SIGINT, partial(signal_handler, bot))
         loop.add_signal_handler(SIGTERM, partial(signal_handler, bot))
 
         loop.run_until_complete(bot.connect(room))
 
-        # Wait all tasks
+        # wait all tasks
+        loop.run_until_complete(asyncio.gather(*asyncio.Task.all_tasks()))
+    finally:
+        loop.close()
+
+
+def pm_worker_callback():
+    loop = asyncio.get_event_loop()
+    try:
+        bot = ChatangoBot(loop=loop, pm=True)
+
+        loop.add_signal_handler(SIGINT, partial(signal_handler, bot))
+        loop.add_signal_handler(SIGTERM, partial(signal_handler, bot))
+
+        loop.run_until_complete(bot.connect())
+
+        # wait all tasks
         loop.run_until_complete(asyncio.gather(*asyncio.Task.all_tasks()))
     finally:
         loop.close()
 
 
 if __name__ == '__main__':
+    # if pm was allowed
+    worker = multiprocessing.Process(target=pm_worker_callback)
+    worker.start()
+
     for room_name in ROOM_NAMES:
         worker = multiprocessing.Process(target=worker_callback,
                 args=[room_name])

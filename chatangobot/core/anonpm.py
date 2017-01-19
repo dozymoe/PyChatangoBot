@@ -2,18 +2,18 @@ import asyncio
 from logging import getLogger
 
 from .channel import BaseChannel
-from .user import User
 
 class AnonPM(BaseChannel):
     """Manages connection with Chatango anon PM."""
 
     event_name_ping = 'onPMPing'
 
-    user_class = User
+    user_class = None
 
     def __init__(self, name, *args, **kwargs):
         self.name = name
         super(AnonPM, self).__init__(*args, **kwargs)
+        self.user_class = self.mgr.user_class
 
 
     def get_server(self):

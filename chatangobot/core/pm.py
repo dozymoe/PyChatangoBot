@@ -5,14 +5,13 @@ import async_timeout
 
 from .channel import BaseChannel
 from .settings import conf
-from .user import User
 
 class PM(BaseChannel):
     """Manages a connection with Chatango PM."""
 
     event_name_ping = 'onPMPing'
 
-    user_class = User
+    user_class = None
 
     contacts = None
     blocklist = None
@@ -21,6 +20,7 @@ class PM(BaseChannel):
 
     def __init__(self, *args, **kwargs):
         super(PM, self).__init__(*args, **kwargs)
+        self.user_class = self.mgr.user_class
 
         self.blocklist = set()
         self.contacts = set()

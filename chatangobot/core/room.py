@@ -4,9 +4,7 @@ import random
 from time import time
 
 from .channel import BaseChannel
-from .message import Message
 from .settings import conf
-from .user import User
 
 ROOM_OWNER = 2
 ROOM_MODERATOR = 1
@@ -19,8 +17,8 @@ class Struct(object):
 class Room(BaseChannel):
     """Manages a connection with a Chatango room."""
 
-    user_class = User
-    message_class = Message
+    user_class = None
+    message_class = None
 
     owner = None
     usercount = 0
@@ -45,6 +43,8 @@ class Room(BaseChannel):
     def __init__(self, name, *args, **kwargs):
         self.name = name
         super(Room, self).__init__(*args, **kwargs)
+        self.user_class = self.mgr.user_class
+        self.message_class = self.mgr.message_class
 
         self.mods = set()
 
@@ -750,7 +750,7 @@ class Room(BaseChannel):
             user = self.user_class.create(name=name, room=self)
             user.addSessionId(self, data[0])
             self._userlist.append(user)
-        self._call_event('onUserCountChange')
+        self._call_event('onUserList', self._userlist)
 
 
     @asyncio.coroutine
