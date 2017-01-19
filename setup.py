@@ -1,6 +1,6 @@
 from setuptools import setup, Extension, find_packages
 
-RELEASE_VERSION = '0.0.2'
+RELEASE_VERSION = '0.0.3'
 
 setup(
     name='pychatangobot',
@@ -16,7 +16,11 @@ setup(
     include_package_data=True,
     platforms='any',
     license='MIT',
-    install_requires=[],
+    install_requires=[
+        "aiohttp",
+        "bleach",
+        "pycircularbuffer",
+    ],
     ext_modules=[],
 )
 
