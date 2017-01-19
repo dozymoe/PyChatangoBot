@@ -17,6 +17,8 @@ class BaseChannel(asyncio.Protocol):
     mgr = None
     name = None
 
+    event_name_ping = 'onPing'
+
     _buf = None
     _cid = None # Connection Id
     _conn = None
@@ -221,7 +223,7 @@ class BaseChannel(asyncio.Protocol):
                 return
 
         self._send_command('')
-        self._call_event('onPing')
+        self._call_event(self.event_name_ping)
 
         asyncio.ensure_future(self._ping(unique_id))
 

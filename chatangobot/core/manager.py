@@ -23,8 +23,6 @@ class Manager(object):
     _log = None
     _future = None
 
-    _userlistEventUnique = False
-
     @property
     def roomnames(self):
         return [room.name for room in self.rooms.values()]

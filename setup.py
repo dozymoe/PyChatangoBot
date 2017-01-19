@@ -1,6 +1,6 @@
 from setuptools import setup, Extension, find_packages
 
-RELEASE_VERSION = '0.0.1'
+RELEASE_VERSION = '0.0.2'
 
 setup(
     name='pychatangobot',

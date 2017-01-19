@@ -14,10 +14,9 @@ DEFAULT_SETTINGS = {
         'prefix': 'chatango_bot_', # prefix of stored data's dictionary key
     },
     'connection': {
-        #'buffer_size': 1048576,
         'buffer_size': 65536,
-        'max_retries': 3,
-        'ping_interval': 60, # seconds
+        'max_retries': 99,
+        'ping_interval': 20, # seconds
         'retry_delay': 10, # seconds
         'timeout': 30, # seconds
         'user_agent': 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 ' +\

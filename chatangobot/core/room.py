@@ -35,7 +35,6 @@ class Room(BaseChannel):
     _mqueue = None
     _connectAmmount = 0
     _premium = False
-    _users = None
     _msgs = None
     _i_log = None
 
@@ -52,7 +51,6 @@ class Room(BaseChannel):
         self._mqueue = {}
         self._history = []
         self._userlist = []
-        self._users = {}
         self._msgs = {}
         self._banlist = {}
         self._unbanlist = {}
@@ -101,7 +99,7 @@ class Room(BaseChannel):
 
     @property
     def usernames(self):
-        return [user.name for user in self.userlist]
+        return [user.name for user in self._userlist]
 
 
     @property
@@ -163,6 +161,7 @@ class Room(BaseChannel):
         for user in self._userlist:
             user.clearSessionIds(self)
 
+        self._userlist = []
         return future
 
 
@@ -751,6 +750,7 @@ class Room(BaseChannel):
             user = self.user_class.create(name=name, room=self)
             user.addSessionId(self, data[0])
             self._userlist.append(user)
+        self._call_event('onUserCountChange')
 
 
     @asyncio.coroutine

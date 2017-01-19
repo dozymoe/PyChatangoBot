@@ -10,6 +10,8 @@ from .user import User
 class PM(BaseChannel):
     """Manages a connection with Chatango PM."""
 
+    event_name_ping = 'onPMPing'
+
     user_class = User
 
     contacts = None

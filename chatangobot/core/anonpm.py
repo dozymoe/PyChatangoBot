@@ -7,6 +7,8 @@ from .user import User
 class AnonPM(BaseChannel):
     """Manages connection with Chatango anon PM."""
 
+    event_name_ping = 'onPMPing'
+
     user_class = User
 
     def __init__(self, name, *args, **kwargs):
