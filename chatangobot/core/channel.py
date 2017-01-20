@@ -8,7 +8,7 @@ from circularbuffer import CircularBuffer # pylint:disable=no-name-in-module
 from bleach import clean
 
 from .settings import conf
-from .utils import coro_later
+from ..utils import coro_later
 
 class BaseChannel(asyncio.Protocol):
     """Manages chatroom."""
@@ -75,6 +75,7 @@ class BaseChannel(asyncio.Protocol):
             retries -= 1
             try:
                 self._cid = uuid4().int
+                self._buf.clear()
 
                 yield from self._loop.create_connection(self, host, port)
                 if self._future is None:

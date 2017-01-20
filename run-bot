@@ -20,7 +20,7 @@ try:
     loop.add_signal_handler(SIGINT, partial(signal_handler, bot))
     loop.add_signal_handler(SIGTERM, partial(signal_handler, bot))
 
-    loop.run_until_complete(bot.connect(*ROOM_NAMES)
+    loop.run_until_complete(bot.connect(*ROOM_NAMES))
 
     # Wait all tasks
     loop.run_until_complete(asyncio.gather(*asyncio.Task.all_tasks()))

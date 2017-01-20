@@ -1,6 +1,6 @@
-from setuptools import setup, Extension, find_packages
+from setuptools import setup, find_packages
 
-RELEASE_VERSION = '0.0.4'
+RELEASE_VERSION = '0.0.5'
 
 setup(
     name='pychatangobot',
@@ -24,4 +24,5 @@ setup(
     ext_modules=[],
 )
 
-print("Visit https://github.com/dozymoe/PyChatangoBot for example run-bot scripts.")
+print('Visit https://github.com/dozymoe/PyChatangoBot for example ' +\
+        'run-bot scripts.')

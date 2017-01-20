@@ -20,7 +20,7 @@ from chatangobot.core.manager import Manager
 def worker_callback(room):
     loop = asyncio.get_event_loop()
     try:
-        bot = ChatangoBot(loop=loop, pm=False)
+        bot = Manager(loop=loop, pm=False)
 
         loop.add_signal_handler(SIGINT, partial(signal_handler, bot))
         loop.add_signal_handler(SIGTERM, partial(signal_handler, bot))
@@ -36,7 +36,7 @@ def worker_callback(room):
 def pm_worker_callback():
     loop = asyncio.get_event_loop()
     try:
-        bot = ChatangoBot(loop=loop, pm=True)
+        bot = Manager(loop=loop, pm=True)
 
         loop.add_signal_handler(SIGINT, partial(signal_handler, bot))
         loop.add_signal_handler(SIGTERM, partial(signal_handler, bot))

@@ -9,9 +9,28 @@
 __pycache__/
 /dist/
 /pychatangobot.egg-info/
+/.virtualenv/
+/python_modules
 
 
 ## vim
 
 *.swo
 *.swp
+
+
+## waf
+
+/.BUILD/
+/.lock-waf_*
+
+
+## dev
+
+/etc/
+/fireh_runner
+/run
+/requirements.txt
+/wscript
+/build_rules.yml
+/configure.sh
