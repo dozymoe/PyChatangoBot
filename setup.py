@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-RELEASE_VERSION = '0.0.5'
+RELEASE_VERSION = '0.0.6'
 
 setup(
     name='pychatangobot',
@@ -20,6 +20,7 @@ setup(
         "aiohttp",
         "bleach",
         "pycircularbuffer",
+        "pytz",
     ],
     ext_modules=[],
 )

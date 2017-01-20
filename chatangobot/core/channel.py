@@ -71,7 +71,7 @@ class BaseChannel(asyncio.Protocol):
         retries = conf['connection']['max_retries']
         retry_delay = conf['connection']['retry_delay']
         self.connected = True
-        while retries > 0:
+        while retries > 0 and self.connected:
             retries -= 1
             try:
                 self._cid = uuid4().int

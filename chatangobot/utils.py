@@ -1,6 +1,9 @@
 import asyncio
 import os
 import re
+from datetime import datetime
+from email.utils import parsedate_tz, mktime_tz
+from pytz import utc
 
 
 def coro_later(loop, delay, coroutine):
@@ -36,3 +39,12 @@ def load_module(basedir, package, module_name):
 
 def create_word_regex(word):
     return re.compile(r'(^|[\s?!.,;])' + word + r'($|[\s?!.,;])')
+
+
+def parse_date(text):
+    timestamp = mktime_tz(parsedate_tz(text))
+    return datetime.fromtimestamp(timestamp, utc)
+
+
+def format_date(date):
+    return date.strftime('%a, %d %b %Y %H:%M:%S GMT')
