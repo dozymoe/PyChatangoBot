@@ -4,6 +4,11 @@ import asyncio
 from functools import partial
 import multiprocessing
 from signal import SIGINT, SIGTERM, signal
+try:
+    import uvloop
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+except ImportError:
+    pass
 
 ROOM_NAMES = ['room1', 'room2']
 

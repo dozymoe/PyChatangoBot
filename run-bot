@@ -3,6 +3,11 @@
 import asyncio
 from functools import partial
 from signal import SIGINT, SIGTERM
+try:
+    import uvloop
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+except ImportError:
+    pass
 
 ROOM_NAMES = ['room1', 'room2']
 
@@ -15,7 +20,7 @@ from chatangobot.core.manager import Manager
 
 loop = asyncio.get_event_loop()
 try:
-    bot = Manager(loop=loop, pm=True)
+    bot = Manager(loop=loop, pm=False)
 
     loop.add_signal_handler(SIGINT, partial(signal_handler, bot))
     loop.add_signal_handler(SIGTERM, partial(signal_handler, bot))
