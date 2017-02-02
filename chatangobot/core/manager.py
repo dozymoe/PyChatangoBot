@@ -849,3 +849,57 @@ class Manager(object):
         @param user_list: users inside the room
         """
         pass
+
+
+    @asyncio.coroutine
+    def onMessageTooLong(self, room, max_size):
+        """
+        Called when bot send a message too big.
+
+        @type room: Room
+        @param room: room where the event occured
+        @type max_size: int
+        @param max_size: the maximum message size allowed
+        """
+        pass
+
+
+    @asyncio.coroutine
+    def onAntiSpam(self, room, wait_time):
+        """
+        Called when bot was blocked from sending any message.
+
+        @type room: Room
+        @param room: room where the event occured
+        @type wait_time: int
+        @param wait_time: wait time in seconds.
+        """
+        pass
+
+
+    @asyncio.coroutine
+    def onAntiSpamBegin(self, room, reason, wait_time):
+        """
+        Called when the server started blocking bot from sending any message.
+
+        @type room: Room
+        @param room: room where the event occured
+        @type reason: int
+        @param reason: why the bot was blocked
+        @type wait_time: int
+        @param wait_time: duration until bot able to send message again
+        """
+        pass
+
+
+    @asyncio.coroutine
+    def onAntiSpamWarning(self, room, reason):
+        """
+        Called when bot was warned for spamming.
+
+        @type room: Room
+        @param room: room where the event occured
+        @type reason: int
+        @param reason: why the bot was given a warning
+        """
+        pass

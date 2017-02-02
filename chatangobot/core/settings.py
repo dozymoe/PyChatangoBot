@@ -33,6 +33,7 @@ DEFAULT_SETTINGS = {
     'message_formatter': {
         'max_length': 1800,
         'overflow': 'chunked', # too large, chunked or crop?
+        'anti_anti_spam': True,
     },
     'user_list': {
         'active_filter': 'recent',

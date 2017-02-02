@@ -9,6 +9,11 @@ from .settings import conf
 ROOM_OWNER = 2
 ROOM_MODERATOR = 1
 
+MAX_LAST_MESSAGES = 5
+UNICODE_WHITESPACES = (u'\u200A', u'\u200B', u'\u200C', u'\u200D', u'\u2060',
+        u'\u2063', u'\uFEFF')
+
+
 class Struct(object):
     def __init__(self, **entries):
         self.__dict__.update(entries)
@@ -39,6 +44,7 @@ class Room(BaseChannel):
     _uid = None
     _aid = None
 
+    _last_messages = None
 
     def __init__(self, name, *args, **kwargs):
         self.name = name
@@ -55,6 +61,7 @@ class Room(BaseChannel):
         self._banlist = {}
         self._unbanlist = {}
         self._i_log = []
+        self._last_messages = []
 
 
     def get_server(self):
@@ -203,6 +210,14 @@ class Room(BaseChannel):
         msg = msg.rstrip()
         if not html:
             msg = self.html_escape(msg)
+
+        if conf['message_formatter']['anti_anti_spam']:
+            while msg in self._last_messages:
+                msg = random.choice(UNICODE_WHITESPACES) + msg
+
+            self._last_messages.append(msg)
+            if len(self._last_messages) > MAX_LAST_MESSAGES:
+                self._last_messages.pop(0)
 
         max_length = conf['message_formatter']['max_length']
         overflow = conf['message_formatter']['overflow']
@@ -815,7 +830,11 @@ class Room(BaseChannel):
 
     @asyncio.coroutine
     def _rcmd_n(self, args):
-        self.usercount = int(args[0], 16)
+        try:
+            self.usercount = int(args[0], 16)
+        except ValueError as e:
+            self._log.debug('Invalid user count %s.', args)
+            raise
         self._call_event('onUserCountChange')
 
 
@@ -894,3 +913,28 @@ class Room(BaseChannel):
             'src': user,
         }
         self._call_event('onUnban', user, target)
+
+
+    @asyncio.coroutine
+    def _rcmd_msglexceeded(self, args):
+        length = int(args[0])
+        self._call_event('onMessageTooLong', length)
+
+
+    @asyncio.coroutine
+    def _rcmd_nlptb(self, args):
+        wait_time = int(args[0])
+        self._call_event('onAntiSpam', wait_time)
+
+
+    @asyncio.coroutine
+    def _rcmd_show_nlp_tb(self, args):
+        reason = int(args[0])
+        wait_time = int(args[1])
+        self._call_event('onAntiSpamBegin', reason, wait_time)
+
+
+    @asyncio.coroutine
+    def _rcmd_show_nlp(self, args):
+        reason = int(args[0])
+        self._call_event('onAntiSpamWarning', reason)
