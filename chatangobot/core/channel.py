@@ -38,7 +38,7 @@ class BaseChannel(asyncio.Protocol):
         if f:
             f = f.group(1)
 
-        return (unescape(clean(html, strip=True)), n, f)
+        return (unescape(self.strip_tags(html)), n, f)
 
 
     def html_escape(self, text, quote=False):
@@ -46,7 +46,7 @@ class BaseChannel(asyncio.Protocol):
 
 
     def strip_tags(self, text):
-        return clean(text, strip=True)
+        return clean(text, tags=[], strip=True)
 
 
     def get_server(self):
@@ -147,22 +147,31 @@ class BaseChannel(asyncio.Protocol):
     def data_received(self, data):
         total = len(data)
         wrote = 0
-        while wrote < total:
+        while self.connected and wrote < total:
             count = self._buf.write(data[wrote:])
             wrote += count
 
-            while True:
-                try:
-                    pos = self._buf.index(b'\0')
-                except ValueError:
-                    break
+            try:
+                pos = self._buf.index(b'\0')
+            except ValueError:
+                continue
 
+            while True:
                 recv = self._buf.read(pos)
                 # drop the \0
                 self._buf.read(1)
 
                 recv = recv.decode('utf-8', errors='replace').rstrip('\r\n')
                 asyncio.ensure_future(self._process(recv))
+
+                try:
+                    pos = self._buf.index(b'\0')
+                except ValueError:
+                    break
+
+            if self._buf.write_available() == 0:
+                self._log.error('Insufficient connection.buffer_size.')
+                self.mgr.disconnect()
 
 
     @asyncio.coroutine

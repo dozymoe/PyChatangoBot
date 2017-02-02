@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-RELEASE_VERSION = '0.0.6'
+RELEASE_VERSION = '0.0.7'
 
 setup(
     name='pychatangobot',
